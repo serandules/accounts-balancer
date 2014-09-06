@@ -11,4 +11,4 @@ var app = express();
 
 app.use(agent.proxy());
 
-agent(http.createServer(app, HTTP_PORT));
+agent(http.createServer(app), HTTP_PORT);
