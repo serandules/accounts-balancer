@@ -14,6 +14,6 @@ app.use(agent.proxy());
 agent(http.createServer(app), HTTP_PORT);
 
 process.on('uncaughtException', function (err) {
-    console.log('unhandled exception');
-    console.trace(err);
+    console.log('unhandled exception ' + err);
+    console.trace(err.stack);
 });
