@@ -9,6 +9,9 @@ var app = express();
 
 app.use(agent.proxy());
 
+//error handling
+app.use(agent.error);
+
 agent(http.createServer(app), HTTP_PORT);
 
 process.on('uncaughtException', function (err) {
