@@ -1,4 +1,4 @@
-var debug = require('debug')('serandules-accounts');
+var debug = require('debug')('serandules:accounts');
 var fs = require('fs');
 var http = require('http');
 var express = require('express');
