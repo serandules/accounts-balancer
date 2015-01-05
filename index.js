@@ -1,3 +1,4 @@
+var debug = require('debug')('serandules-accounts');
 var fs = require('fs');
 var http = require('http');
 var express = require('express');
@@ -15,6 +16,6 @@ app.use(agent.error);
 agent(http.createServer(app), HTTP_PORT);
 
 process.on('uncaughtException', function (err) {
-    console.log('unhandled exception ' + err);
-    console.log(err.stack);
+    debug('unhandled exception ' + err);
+    debug(err.stack);
 });
