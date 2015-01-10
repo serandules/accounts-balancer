@@ -1,19 +1,22 @@
 var debug = require('debug')('serandules:accounts');
-var fs = require('fs');
-var http = require('http');
-var express = require('express');
 var agent = require('hub-agent');
 
-var HTTP_PORT = 4002;
+agent(function() {
+    var fs = require('fs');
+    var http = require('http');
+    var express = require('express');
 
-var app = express();
+    var HTTP_PORT = 4002;
 
-app.use(agent.proxy());
+    var app = express();
 
-//error handling
-app.use(agent.error);
+    app.use(agent.proxy());
 
-agent(http.createServer(app), HTTP_PORT);
+    //error handling
+    app.use(agent.error);
+
+    http.createServer(app).listen(HTTP_PORT);
+});
 
 process.on('uncaughtException', function (err) {
     debug('unhandled exception ' + err);
