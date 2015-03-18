@@ -1,24 +1,37 @@
-var debug = require('debug')('serandules:accounts');
-var agent = require('hub-agent');
+var log = require('logger')('accounts');
+var clustor = require('clustor');
 
-agent(function() {
+var self = '*.accounts.serandives.com';
+var port = 4002;
+
+clustor(function () {
     var fs = require('fs');
     var http = require('http');
     var express = require('express');
-
-    var HTTP_PORT = 4002;
+    var agent = require('hub-agent');
+    var proxy = require('proxy');
+    var procevent = require('procevent')(process);
 
     var app = express();
 
-    app.use(agent.proxy());
+    app.use(proxy);
 
-    //error handling
-    app.use(agent.error);
+    var server = http.createServer(app);
+    server.listen(port);
 
-    http.createServer(app).listen(HTTP_PORT);
+    agent('/drones', function (err, io) {
+        io.once('connect', function () {
+            proxy.listen(self, io);
+            procevent.emit('started');
+        });
+    });
+
+}, function (err, address) {
+    log.info('drone started | domain:%s, address:%s, port:%s', self, address.address, address.port);
 });
 
-process.on('uncaughtException', function (err) {
-    debug('unhandled exception ' + err);
-    debug(err.stack);
-});
+/*
+ process.on('uncaughtException', function (err) {
+ log.fatal('unhandled exception %s', err);
+ log.trace(err.stack);
+ });*/
