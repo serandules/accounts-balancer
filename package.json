@@ -7,11 +7,12 @@
         "email": "serandives@gmail.com"
     },
     "dependencies": {
+        "express": "4.*",
         "logger": "serandules/logger#master",
-        "debug":"*",
-        "express": "3.*",
-        "build": "serandules/build#master",
-        "hub-agent": "serandules/hub-agent#master"
+        "clustor": "serandules/clustor#master",
+        "hub-agent": "serandules/hub-agent#master",
+        "proxy": "serandules/proxy#master",
+        "procevent": "serandules/procevent#master"
     },
     "repository": {
         "type": "git",
