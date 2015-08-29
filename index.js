@@ -8,13 +8,41 @@ clustor(function () {
     var fs = require('fs');
     var http = require('http');
     var express = require('express');
+    var favicon = require('serve-favicon');
+    var builder = require('component-middleware');
     var agent = require('hub-agent');
     var proxy = require('proxy');
     var procevent = require('procevent')(process);
+    var utils = require('utils');
+    var build = require('build');
+
+    var prod = utils.prod();
+
+    var index = fs.readFileSync(__dirname + '/public/index.html', 'utf-8');
 
     var app = express();
 
+    app.use(favicon(__dirname + '/public/images/favicon.ico'));
+
+    app.use('/public', express.static(__dirname + '/public'));
+
     app.use(proxy);
+
+    if (prod) {
+        log.info('building components during startup');
+        build();
+    } else {
+        log.info('hot component building with express middleware');
+        app.use(builder({
+            path: '/public/build'
+        }));
+    }
+
+    //index page
+    app.all('*', function (req, res) {
+        //TODO: check caching headers
+        res.set('Content-Type', 'text/html').status(200).send(index);
+    });
 
     var server = http.createServer(app);
     server.listen(port);

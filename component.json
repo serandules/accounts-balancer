@@ -1,0 +1,8 @@
+{
+    "name": "accounts",
+    "scripts": ["client/index.js"],
+    "templates": ["component.json"],
+    "dependencies": {
+        "serandomps/accounts": "*"
+    }
+}
