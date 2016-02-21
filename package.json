@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "express": "4.*",
+        "dustjs-linkedin": "2.7.*",
         "logger": "serandules/logger#master",
         "clustor": "serandules/clustor#master",
         "hub-agent": "serandules/hub-agent#master",
