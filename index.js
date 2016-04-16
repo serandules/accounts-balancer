@@ -9,16 +9,20 @@ clustor(function () {
     var http = require('http');
     var express = require('express');
     var favicon = require('serve-favicon');
+    var bodyParser = require('body-parser');
     var builder = require('component-middleware');
     var agent = require('hub-agent');
     var proxy = require('proxy');
     var procevent = require('procevent')(process);
     var utils = require('utils');
+    var dust = require('dustjs-linkedin');
     var build = require('build');
 
     var prod = utils.prod();
 
     var index = fs.readFileSync(__dirname + '/public/index.html', 'utf-8');
+
+    dust.loadSource(dust.compile(index, 'index'));
 
     var app = express();
 
@@ -38,6 +42,28 @@ clustor(function () {
         }));
     }
 
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
+    //index page with embedded oauth tokens
+    app.all('/auth/oauth', function (req, res) {
+        var context = {
+            code: req.body.code || req.query.code,
+            error: req.body.error || req.query.error,
+            errorCode: req.body.error_code || req.query.error_code
+        };
+        //TODO: check caching headers
+        dust.render('index', context, function (err, index) {
+            if (err) {
+                log.error(err);
+                res.status(500).send({
+                    error: 'error rendering requested page'
+                });
+                return;
+            }
+            res.set('Content-Type', 'text/html').status(200).send(index);
+        });
+    });
     //index page
     app.all('*', function (req, res) {
         //TODO: check caching headers
